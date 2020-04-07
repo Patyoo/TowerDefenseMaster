@@ -115,28 +115,18 @@ function getMousePos(canvas, evt) {
   }
 function mainLoop(){
 
-
     if(state==1){
-
-    
-        requestAnimationFrame(mainLoop);
+    requestAnimationFrame(mainLoop);
     var now= Date.now();
     delta=(now-time)/100;
     time=now;
     tick++;
     render();
     update(delta);
-   
     }
-
 }
 
 window.onload = function(){   
-
-   
-   
-
-    
      canvas.hidden=true;
      //renderMenuScreen();
      renderMapScreen();
@@ -145,9 +135,6 @@ window.onload = function(){
     //  generateMap();
     //  state=1;
     //  mainLoop();
-    
-
-
 }
 
 window.addEventListener("keyup",function name(e){
@@ -186,7 +173,6 @@ canvas.addEventListener('click', function(evt) {
         towers.push(new Turent((mousePos.x-(mousePos.x%50)),(mousePos.y-(mousePos.y%50)),sizeTile,choiceTower));
         maps[mapChoice][((mousePos.y-(mousePos.y%50))-100)/50][(mousePos.x-(mousePos.x%50))/50]=choiceTower+5;
         console.log("Stavitel")
-        
     }
 
     console.log( ((mousePos.x-(mousePos.x%50))/50 ), ((mousePos.y-(mousePos.y%50))-100)/50 );
