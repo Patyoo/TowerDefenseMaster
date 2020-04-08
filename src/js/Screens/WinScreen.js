@@ -4,7 +4,7 @@ function renderWinScreen(){
 
     var textDiv=document.createElement("div");
     textDiv.className="textDiv";
-    textDiv.textContent="You won!\nScore: X";
+    textDiv.textContent="You won this battle!";
 
 
     var menuDiv=document.createElement("div");

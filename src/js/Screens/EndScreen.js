@@ -4,7 +4,7 @@ function renderEndScreen(){
 
     var textDiv=document.createElement("div");
     textDiv.className="textDiv";
-    textDiv.textContent="You lost!\nWave: X";
+    textDiv.textContent="You have lost!";
 
     var RestartDiv=document.createElement("div");
     RestartDiv.className="clickDiv";
@@ -12,10 +12,6 @@ function renderEndScreen(){
     RestartDiv.addEventListener("click",function(){
         main.remove();
         if(soundsOn) menuSelectSound.play();
-        enemies=[];
-        towers=[];
-        projectiles=[];
-        tick=0;
         canvas.hidden=false;
         state=1;
         generateMap();
@@ -29,11 +25,6 @@ function renderEndScreen(){
     menuDiv.addEventListener("click",function(){
         main.remove();
         if(soundsOn) menuSelectSound.play();
-        enemies=[];
-        towers=[];
-        projectiles=[];
-        tick=0;
-        
         renderMenuScreen();
       
     });

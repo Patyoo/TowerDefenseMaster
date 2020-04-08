@@ -22,16 +22,8 @@ function renderPauseScreen(){
     menuDiv.textContent="Menu";
     menuDiv.addEventListener("click",function(){
         main.remove();
-        enemies=[];
-        towers=[];
-        projectiles=[];
-        map=[];
-        tick=0;
-        for(var i=0;i<maps[mapChoice].length;i++){
-            for(var j=0;j<maps[mapChoice][0].length;j++){
-                if(maps[mapChoice][i][j]>4) maps[mapChoice][i][j]=0;
-            }
-        }
+        saveToStorage();
+        resetGameStats();
         renderMenuScreen();
         if(soundsOn) menuSelectSound.play();
         backgroundMusic.stop();

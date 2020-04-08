@@ -98,10 +98,8 @@ function renderMapScreen(){
                 main.remove();
                 canvas.hidden=false;
                 state=1;
-                if(musicOn){
-                    menuSelectSound.play();
-                    backgroundMusic.play();
-                }
+                if(musicOn) backgroundMusic.play();
+                if(soundsOn) menuSelectSound.play();
                time=Date.now();
                 generateMap();
                 mainLoop();

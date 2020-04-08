@@ -62,7 +62,7 @@ function renderOptionScreen(){
                 EnemyLabel.textContent="Enemies killed:";
                 var enemyValue = document.createElement("p");
                 enemyValue.className="textP";
-                enemyValue.textContent="X";
+                enemyValue.textContent= localStorage.enemiesKilled || 0;
                 EnemyDiv.appendChild(EnemyLabel);
                 EnemyDiv.appendChild(enemyValue);
 
@@ -73,7 +73,7 @@ function renderOptionScreen(){
                 WaveLabel.textContent="Wave played:";
                 var WaveValue = document.createElement("p");
                 WaveValue.className="textP";
-                WaveValue.textContent="X";
+                WaveValue.textContent=localStorage.waves || 0;
             WaveDiv.appendChild(WaveLabel);
             WaveDiv.appendChild(WaveValue);
 
@@ -84,7 +84,7 @@ function renderOptionScreen(){
                 MoneyLabel.textContent="Money gained:";
                 var MoneyValue = document.createElement("p");
                 MoneyValue.className="textP";
-                MoneyValue.textContent="X";
+                MoneyValue.textContent=localStorage.moneyGained || 0;
             MoneyDiv.appendChild(MoneyLabel);
             MoneyDiv.appendChild(MoneyValue);
 
@@ -102,7 +102,7 @@ function renderOptionScreen(){
                 TowerLabel.textContent="Towers built:";
                 var TowerValue = document.createElement("p");
                 TowerValue.className="textP";
-                TowerValue.textContent="X";
+                TowerValue.textContent= localStorage.towerBuild || 0;
                 TowerDiv.appendChild(TowerLabel);
                 TowerDiv.appendChild(TowerValue);
 
@@ -113,7 +113,7 @@ function renderOptionScreen(){
                 GameLabel.textContent="Games started:";
                 var GameValue = document.createElement("p");
                 GameValue.className="textP";
-                GameValue.textContent="X";
+                GameValue.textContent=localStorage.games || 0;
                 Gamesdiv.appendChild(GameLabel);
                 Gamesdiv.appendChild(GameValue);
 
@@ -124,7 +124,7 @@ function renderOptionScreen(){
                 ScoreLabel.textContent="Absolute score:";
                 var ScoreValue = document.createElement("p");
                 ScoreValue.className="textP";
-                ScoreValue.textContent="X";
+                ScoreValue.textContent=localStorage.score || 0;
                 ScoreDiv.appendChild(ScoreLabel);
                 ScoreDiv.appendChild(ScoreValue);
 

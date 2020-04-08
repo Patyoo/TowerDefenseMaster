@@ -7,29 +7,40 @@
 
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext('2d');
+var main;
 var map=[];
 var enemies=[];
 var towers=[];
 var projectiles=[];
-var sizeTile=50;
+
 var tick=0;
-var main;
 var state=0;
 var read=0;
-var health=20;
-var money=100;
-var wave=0;
-var choiceTower=0;
-var mapChoice=0;
-var diffucultyChoice=0;
-var musicOn=0;
-var soundsOn=1;
+
 var time;
 var delta;
 var map1;
 var map2;
 var map3;
 var maps=[map1,map2,map3];
+var sizeTile=50;
+
+var mapChoice=0;
+var diffucultyChoice=0;
+var musicOn=0;
+var soundsOn=1;
+
+var choiceTower=0;
+
+var health=20;
+var money=100;
+var moneyGained=100;
+var wave=1;
+var towersBuild=0;
+var enemiesKilled=0;
+var score=10;
+var maxWave=20;
+
 
 
 function render(){
@@ -48,7 +59,7 @@ function title()
     context.font = "40px Comic Sans MS";
     context.textAlign = "center";
     context.fillText('Health: '+health, 200, 50);
-    context.fillText('Wave: '+wave+"/"+wave, 600, 50);
+    context.fillText('Wave: '+wave+"/"+maxWave, 600, 50);
     context.fillText('Money: '+money, 1000, 50);
 }
 function generateMap(){
@@ -79,7 +90,6 @@ function generateEnemy(){
 function shoot(delta){
 
     if(tick%100==0){
-
         towers.forEach(element => {
   
             if(projectiles.length<enemies.length){
@@ -127,14 +137,15 @@ function mainLoop(){
 }
 
 window.onload = function(){   
+    localStorage.clear();
      canvas.hidden=true;
-     //renderMenuScreen();
-     renderMapScreen();
      loadMusic();
+     renderMenuScreen();
 
-    //  generateMap();
-    //  state=1;
-    //  mainLoop();
+    //  renderMapScreen();
+    //  
+
+   
 }
 
 window.addEventListener("keyup",function name(e){
@@ -148,7 +159,16 @@ window.addEventListener("keyup",function name(e){
     if(e.keyCode==27 && state==1){
         canvas.hidden=true;
         state=0;
+        saveToStorage();
+        resetGameStats();
         renderEndScreen();
+    }
+    if(e.keyCode==87 && state==1){
+        canvas.hidden=true;
+        state=0;
+        saveToStorage();
+        resetGameStats();
+        renderWinScreen();
     }
     if(e.keyCode==49 && state==1){
         choiceTower=0;
@@ -171,12 +191,11 @@ canvas.addEventListener('click', function(evt) {
 
     if(maps[mapChoice][((mousePos.y-(mousePos.y%50))-100)/50][(mousePos.x-(mousePos.x%50))/50] == 0 ){
         towers.push(new Turent((mousePos.x-(mousePos.x%50)),(mousePos.y-(mousePos.y%50)),sizeTile,choiceTower));
-        maps[mapChoice][((mousePos.y-(mousePos.y%50))-100)/50][(mousePos.x-(mousePos.x%50))/50]=choiceTower+5;
+        maps[mapChoice][((mousePos.y-(mousePos.y%50))-100)/50][(mousePos.x-(mousePos.x%50))/50]=choiceTower+10;
         console.log("Stavitel")
     }
 
     console.log( ((mousePos.x-(mousePos.x%50))/50 ), ((mousePos.y-(mousePos.y%50))-100)/50 );
     console.log(maps[mapChoice][((mousePos.y-(mousePos.y%50))-100)/50][(mousePos.x-(mousePos.x%50))/50]);
     }, false);
-
 
