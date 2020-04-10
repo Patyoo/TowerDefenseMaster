@@ -8,15 +8,16 @@ class Projectile{
         this.image.src="";
         this.speed = 1;
         this.rotation = 0;
+        this.damage=0;
         this.identity=identity;
         this.matchAsset();
     }
     
     matchAsset(){
         switch(this.identity){
-            case 0: this.image.src="./Assets/Projectile/projectile1.png"; this.speed=15; break;
-            case 1: this.image.src="./Assets/Projectile/projectile2.png"; this.speed=30; break;
-            case 2: this.image.src="./Assets/Projectile/projectile3.png"; this.speed=45; break;
+            case 0: this.image.src="./Assets/Projectile/projectile1.png"; this.speed=15; this.damage=10; break;
+            case 1: this.image.src="./Assets/Projectile/projectile2.png"; this.speed=30; this.damage=30;break;
+            case 2: this.image.src="./Assets/Projectile/projectile3.png"; this.speed=45; this.damage=100;break;
         }
     }
     acquireEnemy(objectX,objectY,delta){
@@ -38,7 +39,7 @@ class Projectile{
         if(toObjectLength<this.size/2){return 1;}
         else{
             context.save();
-            context.translate(this.x,this.y);
+            context.translate(this.x+this.size/2,this.y+this.size/2);
             context.rotate(this.rotation+(90*Math.PI/180));
             context.drawImage(this.image,this.size/-2, this.size/-2);
             context.restore();

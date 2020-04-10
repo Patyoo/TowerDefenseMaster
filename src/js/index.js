@@ -33,7 +33,7 @@ var soundsOn=1;
 var choiceTower=0;
 
 var health=20;
-var money=100;
+var money=1000; //100
 var moneyGained=100;
 var wave=1;
 var towersBuild=0;
@@ -81,7 +81,7 @@ function drawMap(){
 }
 function generateEnemy(){
     
-    if(tick%100==0){
+    if(tick%50==0){
         enemies.push(new Enemy(0,100,sizeTile,0));
     }
     enemies.forEach(element => element.move(delta));
@@ -89,31 +89,56 @@ function generateEnemy(){
 
 function shoot(delta){
 
-    if(tick%100==0){
-        towers.forEach(element => {
-  
-            if(projectiles.length<enemies.length){
-                projectiles.push(new Projectile(element.x,element.y,sizeTile,element.identity));
-                if(soundsOn) towerShotSound.play();
+        var counter=0;
+        for(var i=0;i<projectiles.length;i++){
+            var counter=0;
+            var totalDamage=0;
+            var j=0;
+            while(i!=j){
+                totalDamage+=projectiles[j].damage;
+                if(totalDamage>=enemies[counter].health){
+                    counter++;
+                }
+                j++;
             }
-        });
-    }
-    if(enemies.length>0){
-    var counter=0;
-    projectiles.forEach(element => {
-       // console.log(element.x+" "+element.y);
-        if(element.acquireEnemy(enemies[counter].x,enemies[counter].y,delta)==1){
-            console.log("Hit");
-            if(soundsOn) enemyDeadSound.play();
-            projectiles.splice(counter,1); enemies.splice(0,1);
+            if(projectiles[i].acquireEnemy(enemies[counter].x,enemies[counter].y,delta)==1){
+                console.log("Hit");
+                money+=enemies[counter].reward;
+                moneyGained+=enemies[counter].reward;
+                if(soundsOn) enemyDeadSound.play();
+                projectiles.splice(i,1); 
+                enemies.splice(counter,1);
+            }
+
         }
-        counter++;
-    });
-}
-}
+
+        if(tick%100==0){
+            var temp;
+            for(var j=0;j<towers.length;j++){
+                    for(temp=0;temp<enemies.length;temp++) if(enemies[temp].health>0){
+                        var newProjectile=new Projectile(towers[j].x,towers[j].y,sizeTile,towers[j].identity);
+                        projectiles.push(newProjectile);
+                        enemies[temp].health-=newProjectile.damage;
+                        if(soundsOn) towerShotSound.play();
+                        console.log("bum");
+                        break;
+                        }
+                    }
+            }
+
+
+    }
 
 function generateTower(){
-    towers.forEach(element => element.create());
+    var towerCounter=0;
+   towers.forEach(element => {
+    if(towerCounter<enemies.length){
+        
+        element.setRotation(enemies[towerCounter].x,enemies[towerCounter].y);
+        towerCounter++;
+    }
+    else element.setRotation(0,0);
+    });
 }
 
 function getMousePos(canvas, evt) {
@@ -140,9 +165,9 @@ window.onload = function(){
     localStorage.clear();
      canvas.hidden=true;
      loadMusic();
-     renderMenuScreen();
+    // renderMenuScreen();
 
-    //  renderMapScreen();
+      renderMapScreen();
     //  
 
    
@@ -179,6 +204,12 @@ window.addEventListener("keyup",function name(e){
     if(e.keyCode==51 && state==1){
         choiceTower=2;
     }
+    if(e.keyCode==77 && state==1){
+        musicOn=!musicOn;
+        if(musicOn) backgroundMusic.play();
+        if(!musicOn) backgroundMusic.stop();
+        soundsOn=!soundsOn; 
+    }
 
 })
    
@@ -189,13 +220,14 @@ canvas.addEventListener('click', function(evt) {
     var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
     console.log(message);  
 
-    if(maps[mapChoice][((mousePos.y-(mousePos.y%50))-100)/50][(mousePos.x-(mousePos.x%50))/50] == 0 ){
-        towers.push(new Turent((mousePos.x-(mousePos.x%50)),(mousePos.y-(mousePos.y%50)),sizeTile,choiceTower));
+    var newTurent=new Turent((mousePos.x-(mousePos.x%50)),(mousePos.y-(mousePos.y%50)),sizeTile,choiceTower);
+    if(maps[mapChoice][((mousePos.y-(mousePos.y%50))-100)/50][(mousePos.x-(mousePos.x%50))/50] == 0 && money>=newTurent.price){
+        towers.push(newTurent);
         maps[mapChoice][((mousePos.y-(mousePos.y%50))-100)/50][(mousePos.x-(mousePos.x%50))/50]=choiceTower+10;
+        money-=newTurent.price;
+        moneyGained+=newTurent.price;
         console.log("Stavitel")
     }
-
-    console.log( ((mousePos.x-(mousePos.x%50))/50 ), ((mousePos.y-(mousePos.y%50))-100)/50 );
     console.log(maps[mapChoice][((mousePos.y-(mousePos.y%50))-100)/50][(mousePos.x-(mousePos.x%50))/50]);
     }, false);
 
