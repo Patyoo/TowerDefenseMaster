@@ -14,7 +14,7 @@ class Enemy{
     }
     matchAsset(){
         switch(this.identity){
-            case 0: this.image.src="./Assets/Enemy/blackCircle.png"; this.health=10; this.reward=2; break;
+            case 0: this.image.src="./Assets/Enemy/blackCircle.png"; this.health=15; this.reward=2; break;
             case 1: this.image.src="./Assets/Enemy/blackSquare.png"; this.health=15; this.reward=3; break;
             case 2: this.image.src="./Assets/Enemy/blackTriangle.png"; this.health=20; this.reward=5; break;
             case 3: this.image.src="./Assets/Enemy/whiteCircle.png"; this.health=30; this.reward=8; break;

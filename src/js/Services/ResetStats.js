@@ -1,7 +1,7 @@
 function resetGameStats(){
     health=20;
     money=100;
-    moneyGained=100;
+    moneyGained=0;
     wave=1;
     towersBuild=0;
     enemiesKilled=0;

@@ -6,6 +6,10 @@ function renderEndScreen(){
     textDiv.className="textDiv";
     textDiv.textContent="You have lost!";
 
+    var ScoreDiv=document.createElement("div");
+    ScoreDiv.className="textDiv";
+    ScoreDiv.textContent="Score: "+score;
+
     var RestartDiv=document.createElement("div");
     RestartDiv.className="clickDiv";
     RestartDiv.textContent="Restart";
@@ -30,6 +34,7 @@ function renderEndScreen(){
     });
 
     main.appendChild(textDiv);
+    main.appendChild(ScoreDiv);
     main.appendChild(RestartDiv);
     main.appendChild(menuDiv);
 

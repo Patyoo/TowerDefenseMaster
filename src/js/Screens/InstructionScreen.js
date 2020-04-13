@@ -14,9 +14,13 @@ function renderInstructionScreen(){
     SelectingLabel.className="textP";
     SelectingLabel.textContent="Selecting type of tower: NumKeys 1,2,3";
 
+    var MuteLabel = document.createElement("p");
+    MuteLabel.className="textP";
+    MuteLabel.textContent="Mute/Unmute sounds and audio: M";
+
     var ResumeDiv=document.createElement("div");
     ResumeDiv.className="clickDiv";
-    ResumeDiv.textContent="Ok";
+    ResumeDiv.textContent="Continue";
     ResumeDiv.addEventListener("click",function(){
         main.remove();
         if(soundsOn) menuSelectSound.play();
@@ -30,6 +34,7 @@ function renderInstructionScreen(){
     main.appendChild(textDiv);
     main.appendChild(PlacingLabel);
     main.appendChild(SelectingLabel);
+    main.appendChild(MuteLabel);
     main.appendChild(ResumeDiv);
     
 

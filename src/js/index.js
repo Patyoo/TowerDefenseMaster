@@ -1,9 +1,3 @@
- //import { Enemy } from './Objects/Enemy';
-
-
-// const game = new Game();
-
-// game.start();
 
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext('2d');
@@ -16,6 +10,7 @@ var projectiles=[];
 var tick=0;
 var state=0;
 var read=0;
+var pause=0;
 
 var time;
 var delta;
@@ -34,7 +29,7 @@ var choiceTower=0;
 
 var health=20;
 var money=1000; //100
-var moneyGained=100;
+var moneyGained=0;
 var wave=1;
 var towersBuild=0;
 var enemiesKilled=0;
@@ -58,9 +53,10 @@ function title()
     context.fillStyle = "red";
     context.font = "40px Comic Sans MS";
     context.textAlign = "center";
-    context.fillText('Health: '+health, 200, 50);
-    context.fillText('Wave: '+wave+"/"+maxWave, 600, 50);
-    context.fillText('Money: '+money, 1000, 50);
+    context.fillText('Health: '+health, 150, 50);
+    context.fillText('Wave: '+wave+"/"+maxWave, 450, 50);
+    context.fillText('Money: '+money, 750, 50);
+    context.fillText('Score: '+score, 1100, 50);
 }
 function generateMap(){
 
@@ -81,7 +77,7 @@ function drawMap(){
 }
 function generateEnemy(){
     
-    if(tick%50==0){
+    if(tick%150==0){
         enemies.push(new Enemy(0,100,sizeTile,0));
     }
     enemies.forEach(element => element.move(delta));
@@ -91,28 +87,34 @@ function shoot(delta){
 
         var counter=0;
         for(var i=0;i<projectiles.length;i++){
-            var counter=0;
+            counter=0;
             var totalDamage=0;
             var j=0;
-            while(i!=j){
+            while(i!=j && enemies.length>0){
                 totalDamage+=projectiles[j].damage;
                 if(totalDamage>=enemies[counter].health){
                     counter++;
                 }
                 j++;
             }
-            if(projectiles[i].acquireEnemy(enemies[counter].x,enemies[counter].y,delta)==1){
+            console.log("Enemy counter:"+counter+",Projectile:"+i);
+            console.log(enemies);
+           
+            if(enemies.length>0 && projectiles[i].acquireEnemy(enemies[counter].x,enemies[counter].y,delta)==1){
+                //check damage >0
                 console.log("Hit");
-                money+=enemies[counter].reward;
-                moneyGained+=enemies[counter].reward;
-                if(soundsOn) enemyDeadSound.play();
                 projectiles.splice(i,1); 
-                enemies.splice(counter,1);
+                if(enemies[counter].health<=0){
+                    money+=enemies[counter].reward;
+                    moneyGained+=enemies[counter].reward;
+                    if(soundsOn) enemyDeadSound.play();
+                    enemies.splice(counter,1);
+                }
             }
 
         }
 
-        if(tick%100==0){
+        if(tick%150==0){
             var temp;
             for(var j=0;j<towers.length;j++){
                     for(temp=0;temp<enemies.length;temp++) if(enemies[temp].health>0){
@@ -120,7 +122,6 @@ function shoot(delta){
                         projectiles.push(newProjectile);
                         enemies[temp].health-=newProjectile.damage;
                         if(soundsOn) towerShotSound.play();
-                        console.log("bum");
                         break;
                         }
                     }
@@ -165,9 +166,9 @@ window.onload = function(){
     localStorage.clear();
      canvas.hidden=true;
      loadMusic();
-    // renderMenuScreen();
+     renderMenuScreen();
 
-      renderMapScreen();
+      //renderMapScreen();
     //  
 
    
@@ -178,6 +179,7 @@ window.addEventListener("keyup",function name(e){
     if(e.keyCode==80 && state!=0){
         canvas.hidden=true;
         state=0;
+        pause=1;
         if(soundsOn)pauseSound.play();
         renderPauseScreen();
     }
@@ -185,15 +187,15 @@ window.addEventListener("keyup",function name(e){
         canvas.hidden=true;
         state=0;
         saveToStorage();
-        resetGameStats();
         renderEndScreen();
+        resetGameStats();
     }
     if(e.keyCode==87 && state==1){
         canvas.hidden=true;
         state=0;
         saveToStorage();
-        resetGameStats();
         renderWinScreen();
+        resetGameStats();
     }
     if(e.keyCode==49 && state==1){
         choiceTower=0;
