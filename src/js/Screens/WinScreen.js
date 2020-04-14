@@ -18,7 +18,6 @@ function renderWinScreen(){
         main.remove();
         if(soundsOn) menuSelectSound.play();
         renderMenuScreen();
-      
     });
 
     main.appendChild(textDiv);

@@ -36,20 +36,18 @@ var enemiesKilled=0;
 var score=10;
 var maxWave=20;
 
-
-
 function render(){
     drawMap();
     title();
-
 }
+
 function update(delta){
     generateTower();
     generateEnemy(delta);
     shoot(delta);
 }
-function title()
-{
+
+function title(){
     context.fillStyle = "red";
     context.font = "40px Comic Sans MS";
     context.textAlign = "center";
@@ -58,14 +56,19 @@ function title()
     context.fillText('Money: '+money, 750, 50);
     context.fillText('Score: '+score, 1100, 50);
 }
-function generateMap(){
 
+function findStartPosition(){
+    for(var i=0;i<maps[mapChoice].length;i++)
+        for(var j=0;j<maps[mapChoice][0].length;j++)
+            if(maps[mapChoice][i][j] == 1) return [i,j];
+}
+
+function generateMap(){
     for(var i=0;i<maps[mapChoice].length;i++){
         for(var j=0;j<maps[mapChoice][0].length;j++){
             map.push(new Tile(j*50,100+i*50,sizeTile,maps[mapChoice][i][j]));
         }
     }
-
 }
 
 function drawMap(){
@@ -75,50 +78,33 @@ function drawMap(){
     context.fill();
     map.forEach(element => element.create());
 }
-function generateEnemy(){
-    
+
+function generateEnemy(){    
     if(tick%150==0){
-        enemies.push(new Enemy(0,100,sizeTile,0));
+        enemies.push(new Enemy(findStartPosition()[1]*sizeTile,findStartPosition()[0]*sizeTile+100,sizeTile,0));
     }
     enemies.forEach(element => element.move(delta));
 }
 
 function shoot(delta){
-
-        var counter=0;
-        for(var i=0;i<projectiles.length;i++){
-            counter=0;
-            var totalDamage=0;
-            var j=0;
-            while(i!=j && enemies.length>0){
-                totalDamage+=projectiles[j].damage;
-                if(totalDamage>=enemies[counter].health){
-                    counter++;
-                }
-                j++;
-            }
-            console.log("Enemy counter:"+counter+",Projectile:"+i);
-            console.log(enemies);
-           
-            if(enemies.length>0 && projectiles[i].acquireEnemy(enemies[counter].x,enemies[counter].y,delta)==1){
-                //check damage >0
-                console.log("Hit");
-                projectiles.splice(i,1); 
-                if(enemies[counter].health<=0){
-                    money+=enemies[counter].reward;
-                    moneyGained+=enemies[counter].reward;
+         for(var i=0;i<projectiles.length;i++){
+            if(projectiles[i].acquireEnemy(projectiles[i].target.x,projectiles[i].target.y,delta)==1){
+                projectiles[i].target.virtualHealth-=projectiles[i].damage;
+                if(projectiles[i].target.virtualHealth<=0){
+                    money+= projectiles[i].target.reward;
+                    moneyGained+= projectiles[i].target.reward;
                     if(soundsOn) enemyDeadSound.play();
-                    enemies.splice(counter,1);
+                    enemies.splice(enemies.indexOf(projectiles[i].target),1);
                 }
+                projectiles.splice(i,1);
             }
-
-        }
+         }
 
         if(tick%150==0){
             var temp;
             for(var j=0;j<towers.length;j++){
                     for(temp=0;temp<enemies.length;temp++) if(enemies[temp].health>0){
-                        var newProjectile=new Projectile(towers[j].x,towers[j].y,sizeTile,towers[j].identity);
+                        var newProjectile=new Projectile(towers[j].x,towers[j].y,sizeTile,towers[j].identity,enemies[temp]);
                         projectiles.push(newProjectile);
                         enemies[temp].health-=newProjectile.damage;
                         if(soundsOn) towerShotSound.play();
@@ -127,14 +113,12 @@ function shoot(delta){
                     }
             }
 
-
     }
 
 function generateTower(){
     var towerCounter=0;
    towers.forEach(element => {
     if(towerCounter<enemies.length){
-        
         element.setRotation(enemies[towerCounter].x,enemies[towerCounter].y);
         towerCounter++;
     }
@@ -150,7 +134,6 @@ function getMousePos(canvas, evt) {
     };
   }
 function mainLoop(){
-
     if(state==1){
     requestAnimationFrame(mainLoop);
     var now= Date.now();
@@ -167,11 +150,7 @@ window.onload = function(){
      canvas.hidden=true;
      loadMusic();
      renderMenuScreen();
-
       //renderMapScreen();
-    //  
-
-   
 }
 
 window.addEventListener("keyup",function name(e){
@@ -212,15 +191,11 @@ window.addEventListener("keyup",function name(e){
         if(!musicOn) backgroundMusic.stop();
         soundsOn=!soundsOn; 
     }
-
 })
    
-
-
 canvas.addEventListener('click', function(evt) {
     var mousePos = getMousePos(canvas, evt);
     var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
-    console.log(message);  
 
     var newTurent=new Turent((mousePos.x-(mousePos.x%50)),(mousePos.y-(mousePos.y%50)),sizeTile,choiceTower);
     if(maps[mapChoice][((mousePos.y-(mousePos.y%50))-100)/50][(mousePos.x-(mousePos.x%50))/50] == 0 && money>=newTurent.price){
@@ -228,8 +203,6 @@ canvas.addEventListener('click', function(evt) {
         maps[mapChoice][((mousePos.y-(mousePos.y%50))-100)/50][(mousePos.x-(mousePos.x%50))/50]=choiceTower+10;
         money-=newTurent.price;
         moneyGained+=newTurent.price;
-        console.log("Stavitel")
     }
-    console.log(maps[mapChoice][((mousePos.y-(mousePos.y%50))-100)/50][(mousePos.x-(mousePos.x%50))/50]);
     }, false);
 

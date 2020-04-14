@@ -1,5 +1,5 @@
 class Projectile{
-    constructor(x, y,size,identity)
+    constructor(x, y,size,identity,target)
     {
         this.x = x;
         this.y = y;
@@ -10,6 +10,7 @@ class Projectile{
         this.rotation = 0;
         this.damage=0;
         this.identity=identity;
+        this.target=target;
         this.matchAsset();
     }
     
@@ -36,7 +37,7 @@ class Projectile{
         this.y += (toObjectY * this.speed*delta);
     
 
-        if(toObjectLength<this.size/2){return 1;}
+        if(toObjectLength<this.size/2) return 1;
         else{
             context.save();
             context.translate(this.x+this.size/2,this.y+this.size/2);

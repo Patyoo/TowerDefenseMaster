@@ -14,8 +14,8 @@ class Tile
     matchAsset(){
         switch(this.identity){
             case 0: this.image.src="./Assets/Tile/tileBuild.png"; break;
-            case 2: this.image.src="./Assets/Tile/tileDestination.png"; break;
-            case 1: this.image.src="./Assets/Tile/tileRoad.png"; break;
+            case 1: this.image.src="./Assets/Tile/tileDestination.png"; break;
+            case 2: this.image.src="./Assets/Tile/tileRoad.png"; break;
         }
     }
     create(){
