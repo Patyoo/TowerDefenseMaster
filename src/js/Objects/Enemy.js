@@ -32,19 +32,31 @@ class Enemy{
         // this.x += (this.speed*delta);
         //var currentTile=[this.x/50,this.y/50];
 
+        //console.log(delta);
+        //this.speed=5-delta;
+
         
         console.log("Before: X:"+this.x+",Y"+this.y);
-        console.log("1:"+((this.y-100-sizeTile+1)/50)+",2:"+((this.y-100)/50));
+        console.log()
         //console.log(this.x+50);
-        if( maps[mapChoice][parseInt((this.y-100)/50)][parseInt((this.x+this.size+this.speed-1)/50)]==2 && ( Math.ceil(((this.y-100-sizeTile+1)/50)) == ((this.y-100)/50) ) ){
+        if( maps[mapChoice][parseInt((this.y-100)/50)][parseInt((this.x+this.size+this.speed-1)/50)] == 2 && (Math.ceil(((this.y-100-sizeTile+1)/50)) == ((this.y-100)/50)) && this.direction!=2 ){
             this.x+=(this.speed);
             this.direction=3;
-            console.log("moveX");
+            console.log("moveX+");
             context.drawImage(this.image, this.x, this.y, this.size, this.size);
             return; 
         }
 
-        if(maps[mapChoice][parseInt((this.y-100+this.size+this.speed-1)/50)][parseInt(this.x/50)]==2 && this.direction!=0){
+        if(maps[mapChoice][parseInt((this.y-100)/50)][parseInt((this.x-this.speed+1)/50)] == 2 &&  (Math.ceil(((this.y-100-sizeTile+1)/50)) == ((this.y-100)/50)) && this.x!=0 && this.direction!=3 ){
+            this.x-=(this.speed);
+            this.direction=2;
+            console.log("moveX-");
+            context.drawImage(this.image, this.x, this.y, this.size, this.size);
+            return; 
+        }
+
+
+        if(maps[mapChoice][parseInt((this.y-100+this.size+this.speed-1)/50)][parseInt(this.x/50)] == 2 && (Math.ceil(((this.x-sizeTile+1)/50)) == ((this.x)/50)) && this.direction!=0 ){
             this.y+=(this.speed);
             this.direction=1;
             context.drawImage(this.image, this.x, this.y, this.size, this.size);
@@ -52,14 +64,10 @@ class Enemy{
             return;
         }
  
-        if(maps[mapChoice][parseInt((this.y-100-this.speed+1)/50)][parseInt(this.x/50)]==2 ){
-            //console.log(maps[mapChoice][parseInt((this.y-100-this.speed+1)/50)][parseInt(this.x/50)]);
-            //console.log("Actual Y:"+this.y);
+        if(maps[mapChoice][parseInt((this.y-100-this.speed+1)/50)][parseInt(this.x/50)] == 2  && (Math.ceil(((this.x-sizeTile+1)/50)) == ((this.x)/50)) && this.direction!=1 && this.y-100!=0){
             this.y-=(this.speed);
-            //console.log(maps[mapChoice][parseInt((this.y-100-this.speed+1)/50)][parseInt(this.x/50)]);
-            //console.log(maps[mapChoice][parseInt((this.y-100-(2*this.speed)+1)/50)][parseInt(this.x/50)]==2);
             this.direction=0;
-         console.log("MoveUp");
+            console.log("MoveUp");
             context.drawImage(this.image, this.x, this.y, this.size, this.size);
             return;
         }

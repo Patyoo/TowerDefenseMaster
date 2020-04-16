@@ -1,4 +1,7 @@
 function renderWinScreen(){
+
+    if(musicOn) backgroundMusic.stop();
+
     var main = document.createElement("div");
     main.className="flex-container";
 
