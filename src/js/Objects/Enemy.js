@@ -33,10 +33,10 @@ class Enemy{
         //var currentTile=[this.x/50,this.y/50];
 
         
-        console.log("Before: X:"+parseInt(this.x/50)+",Y"+parseInt((this.y-100)/50)+"Pole"+maps[mapChoice][parseInt((this.y-100)/50)][parseInt((this.x)/50)]);
-
+        console.log("Before: X:"+this.x+",Y"+this.y);
+        console.log("1:"+((this.y-100-sizeTile+1)/50)+",2:"+((this.y-100)/50));
         //console.log(this.x+50);
-        if( maps[mapChoice][parseInt((this.y-100)/50)][parseInt((this.x+this.size+this.speed-1)/50)]==2){
+        if( maps[mapChoice][parseInt((this.y-100)/50)][parseInt((this.x+this.size+this.speed-1)/50)]==2 && ( Math.ceil(((this.y-100-sizeTile+1)/50)) == ((this.y-100)/50) ) ){
             this.x+=(this.speed);
             this.direction=3;
             console.log("moveX");
@@ -64,7 +64,7 @@ class Enemy{
             return;
         }
 
-        console.log("After: X:"+parseInt(this.x/50)+",Y"+parseInt((this.y-100)/50)+"Pole"+maps[mapChoice][parseInt((this.y-100)/50)][parseInt((this.x)/50)]);
+        //console.log("After: X:"+parseInt(this.x/50)+",Y"+parseInt((this.y-100)/50)+"Pole"+maps[mapChoice][parseInt((this.y-100)/50)][parseInt((this.x)/50)]);
         
 
 
