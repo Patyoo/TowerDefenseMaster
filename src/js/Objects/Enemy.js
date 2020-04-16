@@ -6,11 +6,12 @@ class Enemy{
         this.size=size;
         this.image = new Image;
         this.image.src="";
-        this.speed = 10;
+        this.speed = 5;
         this.identity=identity;
         this.health=0;
         this.reward=0;
         this.virtualHealth=0;
+        this.direction; //0up 1down 2left 3right
         this.matchAsset();
     }
     matchAsset(){
@@ -27,9 +28,53 @@ class Enemy{
         }
     }
     move(delta){
-        if((this.x + this.size) >= 1250 || (this.x) < 0 ) this.speed *= -1;
-        this.x += (this.speed*delta);
+        // if((this.x + this.size) >= 1250 || (this.x) < 0 ) this.speed *= -1;
+        // this.x += (this.speed*delta);
+        //var currentTile=[this.x/50,this.y/50];
 
-        context.drawImage(this.image, this.x, this.y, this.size, this.size);
+        
+        console.log("Before: X:"+parseInt(this.x/50)+",Y"+parseInt((this.y-100)/50)+"Pole"+maps[mapChoice][parseInt((this.y-100)/50)][parseInt((this.x)/50)]);
+
+        //console.log(this.x+50);
+        if( maps[mapChoice][parseInt((this.y-100)/50)][parseInt((this.x+this.size+this.speed-1)/50)]==2){
+            this.x+=(this.speed);
+            this.direction=3;
+            console.log("moveX");
+            context.drawImage(this.image, this.x, this.y, this.size, this.size);
+            return; 
+        }
+
+        if(maps[mapChoice][parseInt((this.y-100+this.size+this.speed-1)/50)][parseInt(this.x/50)]==2 && this.direction!=0){
+            this.y+=(this.speed);
+            this.direction=1;
+            context.drawImage(this.image, this.x, this.y, this.size, this.size);
+            console.log("MoveDown");
+            return;
+        }
+ 
+        if(maps[mapChoice][parseInt((this.y-100-this.speed+1)/50)][parseInt(this.x/50)]==2 ){
+            //console.log(maps[mapChoice][parseInt((this.y-100-this.speed+1)/50)][parseInt(this.x/50)]);
+            //console.log("Actual Y:"+this.y);
+            this.y-=(this.speed);
+            //console.log(maps[mapChoice][parseInt((this.y-100-this.speed+1)/50)][parseInt(this.x/50)]);
+            //console.log(maps[mapChoice][parseInt((this.y-100-(2*this.speed)+1)/50)][parseInt(this.x/50)]==2);
+            this.direction=0;
+         console.log("MoveUp");
+            context.drawImage(this.image, this.x, this.y, this.size, this.size);
+            return;
+        }
+
+        console.log("After: X:"+parseInt(this.x/50)+",Y"+parseInt((this.y-100)/50)+"Pole"+maps[mapChoice][parseInt((this.y-100)/50)][parseInt((this.x)/50)]);
+        
+
+
+        
+
+        
+
+
+       
+
+        //context.drawImage(this.image, this.x, this.y, this.size, this.size);
     }
-}
+}   

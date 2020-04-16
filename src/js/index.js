@@ -60,7 +60,7 @@ function title(){
 function findStartPosition(){
     for(var i=0;i<maps[mapChoice].length;i++)
         for(var j=0;j<maps[mapChoice][0].length;j++)
-            if(maps[mapChoice][i][j] == 1) return [i,j];
+            if(maps[mapChoice][i][j] == 2) return [i,j];
 }
 
 function generateMap(){
@@ -80,7 +80,7 @@ function drawMap(){
 }
 
 function generateEnemy(){    
-    if(tick%150==0){
+    if(tick%150==0 && enemies.length==0){
         enemies.push(new Enemy(findStartPosition()[1]*sizeTile,findStartPosition()[0]*sizeTile+100,sizeTile,0));
     }
     enemies.forEach(element => element.move(delta));
