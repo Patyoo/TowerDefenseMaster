@@ -23,7 +23,7 @@ var sizeTile=50;
 var mapChoice=0;
 var diffucultyChoice=0;
 var musicOn=0;
-var soundsOn=1;
+var soundsOn=0;
 
 var choiceTower=0;
 
@@ -80,13 +80,21 @@ function drawMap(){
 }
 
 function generateEnemy(){    
-    if(tick%150==0 && enemies.length==0){
-        enemies.push(new Enemy(findStartPosition()[1]*sizeTile,findStartPosition()[0]*sizeTile+100,sizeTile,0));
+    if(tick%50==0 && enemies.length==0){
+        var newEnemy=new Enemy(findStartPosition()[1]*sizeTile,findStartPosition()[0]*sizeTile+100,sizeTile,0);
+        newEnemy.matchAsset();
+        enemies.push(newEnemy);
     }
-    enemies.forEach(element => element.move(delta));
+    enemies.forEach(element => {
+        if(!element.move()){
+            health--;
+            enemies.splice(enemies.indexOf(element),1);
+        }
+    });
 }
 
 function shoot(delta){
+    
          for(var i=0;i<projectiles.length;i++){
             if(projectiles[i].acquireEnemy(projectiles[i].target.x,projectiles[i].target.y,delta)==1){
                 projectiles[i].target.virtualHealth-=projectiles[i].damage;
@@ -135,13 +143,14 @@ function getMousePos(canvas, evt) {
   }
 function mainLoop(){
     if(state==1){
-    requestAnimationFrame(mainLoop);
     var now= Date.now();
     delta=(now-time)/100;
+    //requestAnimationFrame(mainLoop);
     time=now;
     tick++;
     render();
     update(delta);
+    requestAnimationFrame(mainLoop);
     }
 }
 
@@ -188,7 +197,7 @@ window.addEventListener("keyup",function name(e){
     if(e.keyCode==77 && state==1){
         musicOn=!musicOn;
         if(musicOn) backgroundMusic.play();
-        if(!musicOn) backgroundMusic.stop();
+        else backgroundMusic.stop();
         soundsOn=!soundsOn; 
     }
 })
@@ -202,7 +211,6 @@ canvas.addEventListener('click', function(evt) {
         towers.push(newTurent);
         maps[mapChoice][((mousePos.y-(mousePos.y%50))-100)/50][(mousePos.x-(mousePos.x%50))/50]=choiceTower+10;
         money-=newTurent.price;
-        moneyGained+=newTurent.price;
     }
     }, false);
 
