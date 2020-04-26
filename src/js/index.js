@@ -28,17 +28,32 @@ var soundsOn=0;
 var choiceTower=0;
 
 var health=20;
-var money=1000; //100
+var money=100; //100
 var moneyGained=0;
 var wave=1;
 var towersBuild=0;
 var enemiesKilled=0;
 var score=10;
 var maxWave=20;
+var numOfEnemies=[5,10,15,20,25];
+var enemiesLeft=numOfEnemies[wave-1];
+var checkTick=0;
+var enemyReleased=0;
+
+
+function nextLevel() {
+        tick=0;
+        enemiesLeft=numOfEnemies[wave];
+        wave++;
+        checkTick=0;
+        enemyReleased=0;
+  }
 
 function render(){
     drawMap();
     title();
+    if(enemiesLeft==0 && checkTick==0) checkTick=tick+200;
+    if(checkTick==tick) nextLevel();
 }
 
 function update(delta){
@@ -72,22 +87,23 @@ function generateMap(){
 }
 
 function drawMap(){
-    context.clearRect(0, 0, 1250, 700);
-    context.rect(0, 0, 1250,700);
     context.fillStyle = "black";
+    context.rect(0, 0, 1250,700);
     context.fill();
     map.forEach(element => element.create());
 }
 
 function generateEnemy(){    
-    if(tick%50==0 && enemies.length==0){
+    if(tick%50==0 && enemyReleased<numOfEnemies[wave-1]){
         var newEnemy=new Enemy(findStartPosition()[1]*sizeTile,findStartPosition()[0]*sizeTile+100,sizeTile,0);
         newEnemy.matchAsset();
         enemies.push(newEnemy);
+        enemyReleased++;
     }
     enemies.forEach(element => {
         if(!element.move()){
             health--;
+            enemiesLeft--;
             enemies.splice(enemies.indexOf(element),1);
         }
     });
@@ -99,6 +115,7 @@ function shoot(delta){
             if(projectiles[i].acquireEnemy(projectiles[i].target.x,projectiles[i].target.y,delta)==1){
                 projectiles[i].target.virtualHealth-=projectiles[i].damage;
                 if(projectiles[i].target.virtualHealth<=0){
+                    enemiesLeft--;
                     money+= projectiles[i].target.reward;
                     moneyGained+= projectiles[i].target.reward;
                     if(soundsOn) enemyDeadSound.play();
@@ -113,11 +130,13 @@ function shoot(delta){
             for(var j=0;j<towers.length;j++){
                     for(temp=0;temp<enemies.length;temp++) if(enemies[temp].health>0){
                         var newProjectile=new Projectile(towers[j].x,towers[j].y,sizeTile,towers[j].identity,enemies[temp]);
+                        towers[j].target=newProjectile;
                         projectiles.push(newProjectile);
                         enemies[temp].health-=newProjectile.damage;
                         if(soundsOn) towerShotSound.play();
                         break;
                         }
+
                     }
             }
 
@@ -127,10 +146,10 @@ function generateTower(){
     var towerCounter=0;
    towers.forEach(element => {
     if(towerCounter<enemies.length){
-        element.setRotation(enemies[towerCounter].x,enemies[towerCounter].y);
+        element.setRotation();
         towerCounter++;
     }
-    else element.setRotation(0,0);
+    else element.setRotation(0,100);
     });
 }
 
@@ -142,10 +161,12 @@ function getMousePos(canvas, evt) {
     };
   }
 function mainLoop(){
+    console.log(tick);
     if(state==1){
     var now= Date.now();
     delta=(now-time)/100;
     //requestAnimationFrame(mainLoop);
+    //console.log(tick);
     time=now;
     tick++;
     render();
@@ -206,7 +227,7 @@ canvas.addEventListener('click', function(evt) {
     var mousePos = getMousePos(canvas, evt);
     var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
 
-    var newTurent=new Turent((mousePos.x-(mousePos.x%50)),(mousePos.y-(mousePos.y%50)),sizeTile,choiceTower);
+    var newTurent=new Turent((mousePos.x-(mousePos.x%50)),(mousePos.y-(mousePos.y%50)),sizeTile,choiceTower,0);
     if(maps[mapChoice][((mousePos.y-(mousePos.y%50))-100)/50][(mousePos.x-(mousePos.x%50))/50] == 0 && money>=newTurent.price){
         towers.push(newTurent);
         maps[mapChoice][((mousePos.y-(mousePos.y%50))-100)/50][(mousePos.x-(mousePos.x%50))/50]=choiceTower+10;

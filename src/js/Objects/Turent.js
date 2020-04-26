@@ -1,6 +1,6 @@
 class Turent
 {
-    constructor(x, y,size,identity)
+    constructor(x, y,size,identity,target)
     {
         this.x = x;
         this.y = y;
@@ -11,6 +11,7 @@ class Turent
         this.rotation = 0;
         this.price=0;
         this.matchAsset();
+        this.target=target;
     }
 
     matchAsset(){
@@ -20,8 +21,7 @@ class Turent
             case 2: this.image.src="./Assets/Turent/turent3.png"; this.price=1000;break;
         }
     }
-    setRotation(objectX,objectY){
-
+    setRotation(objectX=(this.target.x | 0),objectY=(this.target.y | 0)){
         var toObjectX = objectX - this.x;
         var toObjectY = objectY - this.y;
         this.rotation = Math.atan2(toObjectY, toObjectX);

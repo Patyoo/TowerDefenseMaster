@@ -16,9 +16,9 @@ class Projectile{
     
     matchAsset(){
         switch(this.identity){
-            case 0: this.image.src="./Assets/Projectile/projectile1.png"; this.speed=35; this.damage=10; break;
-            case 1: this.image.src="./Assets/Projectile/projectile2.png"; this.speed=30; this.damage=30;break;
-            case 2: this.image.src="./Assets/Projectile/projectile3.png"; this.speed=45; this.damage=100;break;
+            case 0: this.image.src="./Assets/Projectile/projectile1.png"; this.speed=50; this.damage=10; break;
+            case 1: this.image.src="./Assets/Projectile/projectile2.png"; this.speed=100; this.damage=30;break;
+            case 2: this.image.src="./Assets/Projectile/projectile3.png"; this.speed=150; this.damage=100;break;
         }
     }
     acquireEnemy(objectX,objectY,delta){
