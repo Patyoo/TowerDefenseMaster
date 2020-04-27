@@ -34,7 +34,6 @@ var wave=1;
 var towersBuild=0;
 var enemiesKilled=0;
 var score=10;
-var maxWave=20;
 var numOfEnemies=[5,10,15,20,25];
 var enemiesLeft=numOfEnemies[wave-1];
 var checkTick=0;
@@ -47,6 +46,7 @@ function nextLevel() {
         wave++;
         checkTick=0;
         enemyReleased=0;
+        console.log("start");
   }
 
 function render(){
@@ -67,7 +67,7 @@ function title(){
     context.font = "40px Comic Sans MS";
     context.textAlign = "center";
     context.fillText('Health: '+health, 150, 50);
-    context.fillText('Wave: '+wave+"/"+maxWave, 450, 50);
+    context.fillText('Wave: '+wave+"/"+numOfEnemies.length, 450, 50);
     context.fillText('Money: '+money, 750, 50);
     context.fillText('Score: '+score, 1100, 50);
 }
@@ -88,8 +88,7 @@ function generateMap(){
 
 function drawMap(){
     context.fillStyle = "black";
-    context.rect(0, 0, 1250,700);
-    context.fill();
+    context.fillRect(0, 0, 1250,700);
     map.forEach(element => element.create());
 }
 
