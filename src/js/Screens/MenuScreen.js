@@ -28,7 +28,7 @@ function renderMenuScreen(){
     quitDiv.textContent="Quit";
     quitDiv.addEventListener("click",function(){    
         if(soundsOn) menuSelectSound.play();
-        window.close(); 
+        window.location.replace("https://www.fiit.stuba.sk");
     });
 
     main.appendChild(logoDiv);

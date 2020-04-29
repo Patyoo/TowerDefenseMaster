@@ -11,6 +11,9 @@ function resetGameStats(){
     towers=[];
     projectiles=[];
     tick=0;
+    enemiesLeft=numOfEnemies[wave];
+    checkTick=0;
+    enemyReleased=0;
     
     for(var i=0;i<maps[mapChoice].length;i++){
         for(var j=0;j<maps[mapChoice][0].length;j++){

@@ -10,15 +10,16 @@ class Turent
         this.identity=identity;
         this.rotation = 0;
         this.price=0;
-        this.matchAsset();
         this.target=target;
+        this.projectileSpeed=0;
+        this.projectileDamage=10;
     }
 
     matchAsset(){
         switch(this.identity){
-            case 0: this.image.src="./Assets/Turent/turent1.png"; this.price=50;break;
-            case 1: this.image.src="./Assets/Turent/turent2.png"; this.price=250;break;
-            case 2: this.image.src="./Assets/Turent/turent3.png"; this.price=1000;break;
+            case 0: this.image.src="./Assets/Turent/turent1.png";this.projectileSpeed=50;this.price=50;this.projectileDamage=10;break;
+            case 1: this.image.src="./Assets/Turent/turent2.png";this.projectileSpeed=75;this.price=100;this.projectileDamage=20;break;
+            case 2: this.image.src="./Assets/Turent/turent3.png";this.projectileSpeed=100;this.price=150;this.projectileDamage=30;break;
         }
     }
     setRotation(objectX=(this.target.x | 0),objectY=(this.target.y | 0)){
@@ -26,11 +27,10 @@ class Turent
         var toObjectY = objectY - this.y;
         this.rotation = Math.atan2(toObjectY, toObjectX);
 
-         context.save();
+            context.save();
             context.translate(this.x+this.size/2,this.y+this.size/2);
             context.rotate(this.rotation+(90*Math.PI/180));
             context.drawImage(this.image,this.size/-2, this.size/-2);
             context.restore();
-            //context.drawImage(this.image, this.x, this.y, this.size, this.size);
     }
 }

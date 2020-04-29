@@ -40,20 +40,11 @@ var checkTick=0;
 var enemyReleased=0;
 
 
-function nextLevel() {
-        tick=0;
-        enemiesLeft=numOfEnemies[wave];
-        wave++;
-        checkTick=0;
-        enemyReleased=0;
-        console.log("start");
-  }
 
 function render(){
     drawMap();
     title();
-    if(enemiesLeft==0 && checkTick==0) checkTick=tick+200;
-    if(checkTick==tick) nextLevel();
+    checkEndOfWave();
 }
 
 function update(delta){
@@ -93,8 +84,11 @@ function drawMap(){
 }
 
 function generateEnemy(){    
-    if(tick%50==0 && enemyReleased<numOfEnemies[wave-1]){
-        var newEnemy=new Enemy(findStartPosition()[1]*sizeTile,findStartPosition()[0]*sizeTile+100,sizeTile,0);
+    if(tick%(150-(diffucultyChoice*50))==0 && enemyReleased<numOfEnemies[wave-1]){
+        var newEnemy=new Enemy(findStartPosition()[1]*sizeTile,findStartPosition()[0]*sizeTile+100,sizeTile, 
+        Math.floor(Math.random()* (((2+(diffucultyChoice*3)+wave))%10) )  
+        //0
+       );
         newEnemy.matchAsset();
         enemies.push(newEnemy);
         enemyReleased++;
@@ -112,7 +106,7 @@ function shoot(delta){
     
          for(var i=0;i<projectiles.length;i++){
             if(projectiles[i].acquireEnemy(projectiles[i].target.x,projectiles[i].target.y,delta)==1){
-                projectiles[i].target.virtualHealth-=projectiles[i].damage;
+                projectiles[i].target.virtualHealth-=projectiles[i].projectileDamage;
                 if(projectiles[i].target.virtualHealth<=0){
                     enemiesLeft--;
                     money+= projectiles[i].target.reward;
@@ -124,14 +118,15 @@ function shoot(delta){
             }
          }
 
-        if(tick%150==0){
+        if(tick%50==0){
             var temp;
             for(var j=0;j<towers.length;j++){
                     for(temp=0;temp<enemies.length;temp++) if(enemies[temp].health>0){
-                        var newProjectile=new Projectile(towers[j].x,towers[j].y,sizeTile,towers[j].identity,enemies[temp]);
+                        var newProjectile=new Projectile(towers[j].x,towers[j].y,sizeTile,towers[j].identity,enemies[temp],towers[j].projectileSpeed,towers[j].projectileDamage);
                         towers[j].target=newProjectile;
                         projectiles.push(newProjectile);
-                        enemies[temp].health-=newProjectile.damage;
+                        console.log(newProjectile);
+                        enemies[temp].health-=newProjectile.projectileDamage;
                         if(soundsOn) towerShotSound.play();
                         break;
                         }
@@ -160,12 +155,9 @@ function getMousePos(canvas, evt) {
     };
   }
 function mainLoop(){
-    console.log(tick);
     if(state==1){
     var now= Date.now();
     delta=(now-time)/100;
-    //requestAnimationFrame(mainLoop);
-    //console.log(tick);
     time=now;
     tick++;
     render();
@@ -222,15 +214,33 @@ window.addEventListener("keyup",function name(e){
     }
 })
    
+
+
 canvas.addEventListener('click', function(evt) {
     var mousePos = getMousePos(canvas, evt);
-    var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
+    var posXMap =(mousePos.x-(mousePos.x%50));
+    var posYMap= (mousePos.y-(mousePos.y%50));
 
-    var newTurent=new Turent((mousePos.x-(mousePos.x%50)),(mousePos.y-(mousePos.y%50)),sizeTile,choiceTower,0);
-    if(maps[mapChoice][((mousePos.y-(mousePos.y%50))-100)/50][(mousePos.x-(mousePos.x%50))/50] == 0 && money>=newTurent.price){
+    function getTower(){
+        for(var i=0;i<towers.length;i++) if(towers[i].x == posXMap && towers[i].y==posYMap) return towers[i];
+    }
+    
+    var newTurent=new Turent(posXMap,posYMap,sizeTile,choiceTower,0);
+    newTurent.matchAsset();
+    if(maps[mapChoice][(posYMap-100)/50][posXMap/50] == 0 && money-newTurent.price>=0){
         towers.push(newTurent);
-        maps[mapChoice][((mousePos.y-(mousePos.y%50))-100)/50][(mousePos.x-(mousePos.x%50))/50]=choiceTower+10;
+        //newTurent.matchAsset();
+        maps[mapChoice][(posYMap-100)/50][posXMap/50]=choiceTower+10;
         money-=newTurent.price;
+        return;
+    }
+
+    
+    var searchedTower=getTower();
+    if(maps[mapChoice][(posYMap-100)/50][posXMap/50]>9 && money>=(searchedTower.price/2)){
+        searchedTower.projectileSpeed+=(searchedTower.projectileSpeed/2);
+        searchedTower.projectileDamage+=(searchedTower.projectileDamage/2);
+        money-=searchedTower.price;
     }
     }, false);
 

@@ -1,14 +1,14 @@
 class Projectile{
-    constructor(x, y,size,identity,target)
+    constructor(x, y,size,identity,target,projectileSpeed,projectileDamage)
     {
         this.x = x;
         this.y = y;
         this.size=size;
         this.image = new Image;
         this.image.src="";
-        this.speed = 1;
-        this.rotation = 0;
-        this.damage=0;
+        this.projectileSpeed=projectileSpeed;
+        this.projectileDamage=projectileDamage;
+        this.rotation=0;
         this.identity=identity;
         this.target=target;
         this.matchAsset();
@@ -16,9 +16,9 @@ class Projectile{
     
     matchAsset(){
         switch(this.identity){
-            case 0: this.image.src="./Assets/Projectile/projectile1.png"; this.speed=50; this.damage=10; break;
-            case 1: this.image.src="./Assets/Projectile/projectile2.png"; this.speed=100; this.damage=30;break;
-            case 2: this.image.src="./Assets/Projectile/projectile3.png"; this.speed=150; this.damage=100;break;
+            case 0: this.image.src="./Assets/Projectile/projectile1.png";break;
+            case 1: this.image.src="./Assets/Projectile/projectile2.png";break;
+            case 2: this.image.src="./Assets/Projectile/projectile3.png";break;
         }
     }
     acquireEnemy(objectX,objectY,delta){
@@ -33,8 +33,8 @@ class Projectile{
         toObjectY = toObjectY / toObjectLength;
     
         // Move towards the player
-        this.x += (toObjectX * this.speed*delta);
-        this.y += (toObjectY * this.speed*delta);
+        this.x += (toObjectX * this.projectileSpeed*delta);
+        this.y += (toObjectY * this.projectileSpeed*delta);
     
 
         if(toObjectLength<this.size/2) return 1;
