@@ -102,6 +102,14 @@ function generateEnemy(){
     });
 }
 
+function getDistance(objectX,objectY,towerX,towerY){
+    var toObjectX = objectX - towerX;
+    var toObjectY = objectY - towerY;
+    return Math.sqrt(toObjectX * toObjectX + toObjectY * toObjectY);
+}
+
+
+
 function shoot(delta){
     
          for(var i=0;i<projectiles.length;i++){
@@ -120,17 +128,26 @@ function shoot(delta){
 
         if(tick%50==0){
             var temp;
-            for(var j=0;j<towers.length;j++){
-                    for(temp=0;temp<enemies.length;temp++) if(enemies[temp].health>0){
-                        var newProjectile=new Projectile(towers[j].x,towers[j].y,sizeTile,towers[j].identity,enemies[temp],towers[j].projectileSpeed,towers[j].projectileDamage);
-                        towers[j].target=newProjectile;
-                        projectiles.push(newProjectile);
-                        console.log(newProjectile);
-                        enemies[temp].health-=newProjectile.projectileDamage;
-                        if(soundsOn) towerShotSound.play();
-                        break;
-                        }
+            
+                    towers.sort(function(a, b) {
+                        return a.x - b.x;
+                    });
 
+                    for(temp=0;temp<enemies.length;temp++){
+                        for(var j=0;j<towers.length;j++){
+
+                            //urobit si lokalne pole,s tym ze dialka zodpoveda, priebezne sortit towery a zaroven pozerat ci uz nestrialaju
+
+
+                            if(getDistance(enemies[temp].x,enemies[temp].y,towers[j].x,towers[j].y) <towers[j].range && enemies[temp].health>0){
+                            var newProjectile=new Projectile(towers[j].x,towers[j].y,sizeTile,towers[j].identity,enemies[temp],towers[j].projectileSpeed,towers[j].projectileDamage);
+                            towers[j].target=newProjectile;
+                            projectiles.push(newProjectile);
+                            console.log(newProjectile);
+                            enemies[temp].health-=newProjectile.projectileDamage;
+                            if(soundsOn) towerShotSound.play();
+                            }
+                        }
                     }
             }
 
@@ -139,11 +156,9 @@ function shoot(delta){
 function generateTower(){
     var towerCounter=0;
    towers.forEach(element => {
-    if(towerCounter<enemies.length){
-        element.setRotation();
+        element.setRotation(element.target.x,element.target.y);
         towerCounter++;
-    }
-    else element.setRotation(0,100);
+        console.log("Prva pod");
     });
 }
 
