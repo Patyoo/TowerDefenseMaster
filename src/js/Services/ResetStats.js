@@ -17,9 +17,6 @@ function resetGameStats(){
     enemyReleased=0;
     
     for(var i=0;i<maps[mapChoice].length;i++){
-        for(var j=0;j<maps[mapChoice][0].length;j++){
-            if(maps[mapChoice][i][j]>9) maps[mapChoice][i][j]=0;
-        }
+        for(var j=0;j<maps[mapChoice][0].length;j++) if(maps[mapChoice][i][j]>9) maps[mapChoice][i][j]=0;
     }
-    
-    }
+}

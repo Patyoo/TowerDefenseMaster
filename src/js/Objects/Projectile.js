@@ -1,6 +1,5 @@
 class Projectile{
-    constructor(x, y,size,identity,target,projectileSpeed,projectileDamage)
-    {
+    constructor(x, y,size,identity,target,projectileSpeed,projectileDamage){
         this.x = x;
         this.y = y;
         this.size=size;
@@ -13,7 +12,6 @@ class Projectile{
         this.target=target;
         this.matchAsset();
     }
-    
     matchAsset(){
         switch(this.identity){
             case 0: this.image.src="./Assets/Projectile/projectile1.png";break;
@@ -27,16 +25,13 @@ class Projectile{
         var toObjectY = objectY - this.y;
         this.rotation = Math.atan2(toObjectY, toObjectX);
     
-        // Normalize
         var toObjectLength = Math.sqrt(toObjectX * toObjectX + toObjectY * toObjectY);
         toObjectX = toObjectX / toObjectLength;
         toObjectY = toObjectY / toObjectLength;
     
-        // Move towards the player
         this.x += (toObjectX * this.projectileSpeed*delta);
         this.y += (toObjectY * this.projectileSpeed*delta);
     
-
         if(toObjectLength<this.size/2) return 1;
         else{
             context.save();
@@ -47,5 +42,4 @@ class Projectile{
             return 0;
         }
     }
-
 }

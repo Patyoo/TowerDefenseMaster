@@ -1,7 +1,5 @@
-class Tile
-{
-    constructor(x, y,size,identity)
-    {
+class Tile{
+    constructor(x, y,size,identity){
         this.x = x;
         this.y = y;
         this.size=size;
@@ -10,7 +8,6 @@ class Tile
         this.identity=identity;
         this.matchAsset();
     }
-
     matchAsset(){
         switch(this.identity){
             case 0: this.image.src="./Assets/Tile/tileBuild.png"; break;

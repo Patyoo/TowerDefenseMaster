@@ -1,5 +1,4 @@
 function renderOptionScreen(){
-
     main = document.createElement("div");
     main.className="flex-container";
 
@@ -147,5 +146,4 @@ function renderOptionScreen(){
     main.appendChild(playerStatsDiv1);
     main.appendChild(menuDiv);
     document.body.appendChild(main);
-
     }

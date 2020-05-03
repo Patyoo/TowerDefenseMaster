@@ -2,7 +2,6 @@ function renderMenuScreen(){
     main = document.createElement("div");
     main.className="flex-container";
 
-
     var logoDiv=document.createElement("div");
     logoDiv.className="logoDiv";
     var logo = document.createElement("IMG");

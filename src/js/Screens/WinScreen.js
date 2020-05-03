@@ -1,5 +1,4 @@
 function renderWinScreen(){
-
     if(musicOn) backgroundMusic.stop();
 
     var main = document.createElement("div");
@@ -13,7 +12,6 @@ function renderWinScreen(){
     ScoreDiv.className="textDiv";
     ScoreDiv.textContent="Score: "+score;
 
-
     var menuDiv=document.createElement("div");
     menuDiv.className="clickDiv";
     menuDiv.textContent="Menu";
@@ -22,11 +20,8 @@ function renderWinScreen(){
         if(soundsOn) menuSelectSound.play();
         renderMenuScreen();
     });
-
     main.appendChild(textDiv);
     main.appendChild(ScoreDiv);
     main.appendChild(menuDiv);
-
     document.body.appendChild(main);
-    
     }

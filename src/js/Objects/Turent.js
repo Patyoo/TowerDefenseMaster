@@ -1,7 +1,5 @@
-class Turent
-{
-    constructor(x, y,size,identity,target)
-    {
+class Turent{
+    constructor(x, y,size,identity,target){
         this.x = x;
         this.y = y;
         this.size=size;
@@ -9,14 +7,13 @@ class Turent
         this.image.src="";
         this.identity=identity;
         this.rotation = 0;
-        this.price=0;
+        this.price;
         this.target=target;
-        this.projectileSpeed=0;
-        this.projectileDamage=0;
-        this.range=0;
+        this.projectileSpeed;
+        this.projectileDamage;
+        this.range;
         this.shooting=0;
     }
-
     matchAsset(){
         switch(this.identity){
             case 0: this.image.src="./Assets/Turent/turent1.png";this.projectileSpeed=50;this.price=50;this.projectileDamage=10;this.range=150;break;

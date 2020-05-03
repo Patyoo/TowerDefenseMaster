@@ -1,10 +1,8 @@
 
-
 function checkEndOfWave(){
     if(enemiesLeft==0 && checkTick==0) checkTick=tick+200;
     if(checkTick==tick) nextLevel();
 }
-
 function nextLevel() {
     tick=0;
     enemiesLeft=numOfEnemies[wave];

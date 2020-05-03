@@ -1,5 +1,4 @@
 function renderMapScreen(){
-
     main = document.createElement("div");
     main.className="flex-container";
 
@@ -124,12 +123,10 @@ function renderMapScreen(){
                 generateMap();
                 mainLoop();
                     });
-
     main.appendChild(MapLabel);
     main.appendChild(Mapdiv);
     main.appendChild(DiffucultyLabel);
     main.appendChild(DifficultyDiv);
     main.appendChild(menuDiv);
     document.body.appendChild(main);
-
     }

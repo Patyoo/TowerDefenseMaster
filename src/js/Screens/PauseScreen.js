@@ -28,10 +28,8 @@ function renderPauseScreen(){
         if(soundsOn) menuSelectSound.play();
         backgroundMusic.stop();
     });
-
     main.appendChild(textDiv);
     main.appendChild(ResumeDiv);
     main.appendChild(menuDiv);
-
     document.body.appendChild(main);
     }

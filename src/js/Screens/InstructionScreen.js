@@ -28,16 +28,10 @@ function renderInstructionScreen(){
         renderMapScreen();
         console.log(read);
     });
-
-    
-
     main.appendChild(textDiv);
     main.appendChild(PlacingLabel);
     main.appendChild(SelectingLabel);
     main.appendChild(MuteLabel);
     main.appendChild(ResumeDiv);
-    
-
     document.body.appendChild(main);
-    
     }

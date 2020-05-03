@@ -33,14 +33,11 @@ function renderEndScreen(){
         main.remove();
         if(soundsOn) menuSelectSound.play();
         renderMenuScreen();
-      
     });
 
     main.appendChild(textDiv);
     main.appendChild(ScoreDiv);
     main.appendChild(RestartDiv);
     main.appendChild(menuDiv);
-
     document.body.appendChild(main);
-    
     }

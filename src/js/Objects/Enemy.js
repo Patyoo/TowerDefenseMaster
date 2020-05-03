@@ -1,6 +1,5 @@
 class Enemy{
-    constructor(x, y,size,identity)
-    {
+    constructor(x, y,size,identity){
         this.x = x;
         this.y = y;
         this.size=size;
@@ -10,7 +9,7 @@ class Enemy{
         this.identity=identity;
         this.health;
         this.reward;
-        this.virtualHealth=0;
+        this.virtualHealth;
         this.direction; //0up 1down 2left 3right
         this.punishment=this.identity+1;
     }
@@ -44,7 +43,6 @@ class Enemy{
             return 1; 
         }
 
-
         if(maps[mapChoice][parseInt((this.y-100+this.size+this.speed-1)/50)][parseInt(this.x/50)] == 2 && (Math.ceil(((this.x-sizeTile+1)/50)) == (this.x)/50) && this.direction!=0 ){
             this.y+=(this.speed);
             this.direction=1;
@@ -58,6 +56,5 @@ class Enemy{
             context.drawImage(this.image, this.x, this.y, this.size, this.size);
             return 1;
         }
-
     }
 }   
