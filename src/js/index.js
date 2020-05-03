@@ -33,12 +33,13 @@ var moneyGained=0;
 var wave=1;
 var towersBuild=0;
 var enemiesKilled=0;
-var score=10;
+var score=0;
 var numOfEnemies=[5,10,15,20,25];
 var enemiesLeft=numOfEnemies[wave-1];
 var checkTick=0;
 var enemyReleased=0;
 
+var animations=[];
 
 
 function render(){
@@ -51,6 +52,7 @@ function update(delta){
     generateTower();
     generateEnemy(delta);
     shoot(delta);
+    moveAnimations();
 }
 
 function title(){
@@ -95,31 +97,38 @@ function generateEnemy(){
     }
     enemies.forEach(element => {
         if(!element.move()){
-            health--;
+            health-=element.punishment;
             enemiesLeft--;
             enemies.splice(enemies.indexOf(element),1);
+        }
+        if(health<=0){
+            canvas.hidden=true;
+            state=0;
+            saveToStorage();
+            renderEndScreen();
+            resetGameStats();
         }
     });
 }
 
-function getDistance(objectX,objectY,towerX,towerY){
-    var toObjectX = objectX - towerX;
-    var toObjectY = objectY - towerY;
-    return Math.sqrt(toObjectX * toObjectX + toObjectY * toObjectY);
+function moveAnimations(){
+    animations.forEach(element => {
+       element.move();
+       if(element.limit==0) animations.splice(animations.indexOf(element),1);
+    });
 }
 
-
-
 function shoot(delta){
-    
          for(var i=0;i<projectiles.length;i++){
             if(projectiles[i].acquireEnemy(projectiles[i].target.x,projectiles[i].target.y,delta)==1){
                 projectiles[i].target.virtualHealth-=projectiles[i].projectileDamage;
                 if(projectiles[i].target.virtualHealth<=0){
                     enemiesLeft--;
+                    score+=projectiles[i].target.reward;
                     money+= projectiles[i].target.reward;
                     moneyGained+= projectiles[i].target.reward;
                     if(soundsOn) enemyDeadSound.play();
+                    animations.push(new Animation(projectiles[i].x,projectiles[i].y,sizeTile,1));
                     enemies.splice(enemies.indexOf(projectiles[i].target),1);
                 }
                 projectiles.splice(i,1);
@@ -128,20 +137,19 @@ function shoot(delta){
 
         if(tick%50==0){
             var temp;
-            
-                    towers.sort(function(a, b) {
-                        return a.x - b.x;
-                    });
-
                     for(temp=0;temp<enemies.length;temp++){
+                        if(enemies[temp].health<=0) continue;
                         for(var j=0;j<towers.length;j++){
 
-                            //urobit si lokalne pole,s tym ze dialka zodpoveda, priebezne sortit towery a zaroven pozerat ci uz nestrialaju
+                            var towersDistances=[];
+                            for(var i=0;i<towers.length;i++) towersDistances.push(getDistance(enemies[temp].x,enemies[temp].y,towers[i].x,towers[i].y));
+                            var minIndex=getMinIndex(towersDistances,towers);
+                            if(minIndex==-1) break;
 
-
-                            if(getDistance(enemies[temp].x,enemies[temp].y,towers[j].x,towers[j].y) <towers[j].range && enemies[temp].health>0){
-                            var newProjectile=new Projectile(towers[j].x,towers[j].y,sizeTile,towers[j].identity,enemies[temp],towers[j].projectileSpeed,towers[j].projectileDamage);
-                            towers[j].target=newProjectile;
+                            if(getDistance(enemies[temp].x,enemies[temp].y,towers[minIndex].x,towers[minIndex].y) <=towers[minIndex].range && enemies[temp].health>0){
+                            var newProjectile=new Projectile(towers[minIndex].x,towers[minIndex].y,sizeTile,towers[minIndex].identity,enemies[temp],towers[minIndex].projectileSpeed,towers[minIndex].projectileDamage);
+                            towers[minIndex].shooting=1;
+                            towers[minIndex].target=newProjectile;
                             projectiles.push(newProjectile);
                             console.log(newProjectile);
                             enemies[temp].health-=newProjectile.projectileDamage;
@@ -159,6 +167,7 @@ function generateTower(){
         element.setRotation(element.target.x,element.target.y);
         towerCounter++;
         console.log("Prva pod");
+        element.shooting=0;
     });
 }
 
@@ -186,7 +195,6 @@ window.onload = function(){
      canvas.hidden=true;
      loadMusic();
      renderMenuScreen();
-      //renderMapScreen();
 }
 
 window.addEventListener("keyup",function name(e){
@@ -212,15 +220,12 @@ window.addEventListener("keyup",function name(e){
         renderWinScreen();
         resetGameStats();
     }
-    if(e.keyCode==49 && state==1){
-        choiceTower=0;
-    }
-    if(e.keyCode==50 && state==1){
-        choiceTower=1;
-    }
-    if(e.keyCode==51 && state==1){
-        choiceTower=2;
-    }
+    if(e.keyCode==49 && state==1) choiceTower=0;
+    
+    if(e.keyCode==50 && state==1) choiceTower=1;
+    
+    if(e.keyCode==51 && state==1) choiceTower=2;
+    
     if(e.keyCode==77 && state==1){
         musicOn=!musicOn;
         if(musicOn) backgroundMusic.play();
@@ -244,18 +249,17 @@ canvas.addEventListener('click', function(evt) {
     newTurent.matchAsset();
     if(maps[mapChoice][(posYMap-100)/50][posXMap/50] == 0 && money-newTurent.price>=0){
         towers.push(newTurent);
-        //newTurent.matchAsset();
         maps[mapChoice][(posYMap-100)/50][posXMap/50]=choiceTower+10;
         money-=newTurent.price;
         return;
     }
 
-    
     var searchedTower=getTower();
     if(maps[mapChoice][(posYMap-100)/50][posXMap/50]>9 && money>=(searchedTower.price/2)){
         searchedTower.projectileSpeed+=(searchedTower.projectileSpeed/2);
         searchedTower.projectileDamage+=(searchedTower.projectileDamage/2);
         money-=searchedTower.price;
+        animations.push(new Animation(posXMap,posYMap,sizeTile,0));
     }
     }, false);
 

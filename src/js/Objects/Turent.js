@@ -14,6 +14,7 @@ class Turent
         this.projectileSpeed=0;
         this.projectileDamage=0;
         this.range=0;
+        this.shooting=0;
     }
 
     matchAsset(){

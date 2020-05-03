@@ -12,6 +12,7 @@ class Enemy{
         this.reward;
         this.virtualHealth=0;
         this.direction; //0up 1down 2left 3right
+        this.punishment=this.identity+1;
     }
     matchAsset(){
         switch(this.identity){

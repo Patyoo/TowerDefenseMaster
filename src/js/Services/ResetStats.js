@@ -10,6 +10,7 @@ function resetGameStats(){
     enemies=[];
     towers=[];
     projectiles=[];
+    animations=[];
     tick=0;
     enemiesLeft=numOfEnemies[wave];
     checkTick=0;
