@@ -15,6 +15,8 @@ function resetGameStats(){
     enemiesLeft=numOfEnemies[wave];
     checkTick=0;
     enemyReleased=0;
+    mapChoice=0;
+    diffucultyChoice=0;
     
     for(var i=0;i<maps[mapChoice].length;i++){
         for(var j=0;j<maps[mapChoice][0].length;j++) if(maps[mapChoice][i][j]>9) maps[mapChoice][i][j]=0;

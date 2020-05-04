@@ -39,6 +39,10 @@ var enemiesLeft=numOfEnemies[wave-1];
 var checkTick=0;
 var enemyReleased=0;
 
+var buttonY=10;
+var musicOnButtonX=950;
+var soundOnButtonX=1050;
+var pauseButtonX=1150;
 var animations=[];
 
 
@@ -56,13 +60,18 @@ function update(delta){
 }
 
 function title(){
-    context.fillStyle = "red";
+    context.fillStyle = "#006B38";
     context.font = "40px Comic Sans MS";
     context.textAlign = "center";
-    context.fillText('Health: '+health, 150, 50);
-    context.fillText('Wave: '+wave+"/"+numOfEnemies.length, 450, 50);
-    context.fillText('Money: '+money, 750, 50);
-    context.fillText('Score: '+score, 1100, 50);
+    new StaticImages(20,10,sizeTile,0).create();
+    context.fillText(health, 100, 50);
+    new StaticImages(200,10,sizeTile,1).create();
+    context.fillText(money, 290, 50);
+    context.fillText('Wave: '+wave+"/"+numOfEnemies.length, 500, 50);
+    context.fillText('Score: '+score, 750, 50);
+    new StaticImages(musicOnButtonX,buttonY,sizeTile,3-musicOn).create();
+    new StaticImages(soundOnButtonX,buttonY,sizeTile,5-soundsOn).create();
+    new StaticImages(pauseButtonX,buttonY,sizeTile,6).create();
 }
 
 function findStartPosition(){
@@ -221,11 +230,8 @@ window.addEventListener("keyup",function name(e){
         resetGameStats();
     }
     if(e.keyCode==49 && state==1) choiceTower=0;
-    
     if(e.keyCode==50 && state==1) choiceTower=1;
-    
     if(e.keyCode==51 && state==1) choiceTower=2;
-    
     if(e.keyCode==77 && state==1){
         musicOn=!musicOn;
         if(musicOn) backgroundMusic.play();
@@ -234,32 +240,56 @@ window.addEventListener("keyup",function name(e){
     }
 })
    
-
-
 canvas.addEventListener('click', function(evt) {
     var mousePos = getMousePos(canvas, evt);
     var posXMap =(mousePos.x-(mousePos.x%50));
     var posYMap= (mousePos.y-(mousePos.y%50));
 
-    function getTower(){
-        for(var i=0;i<towers.length;i++) if(towers[i].x == posXMap && towers[i].y==posYMap) return towers[i];
-    }
-    
-    var newTurent=new Turent(posXMap,posYMap,sizeTile,choiceTower,0);
-    newTurent.matchAsset();
-    if(maps[mapChoice][(posYMap-100)/50][posXMap/50] == 0 && money-newTurent.price>=0){
-        towers.push(newTurent);
-        maps[mapChoice][(posYMap-100)/50][posXMap/50]=choiceTower+10;
-        money-=newTurent.price;
-        return;
-    }
+    console.log(mousePos.x,mousePos.y);
 
-    var searchedTower=getTower();
-    if(maps[mapChoice][(posYMap-100)/50][posXMap/50]>9 && money>=(searchedTower.price/2)){
-        searchedTower.projectileSpeed+=(searchedTower.projectileSpeed/2);
-        searchedTower.projectileDamage+=(searchedTower.projectileDamage/2);
-        money-=searchedTower.price;
-        animations.push(new Animation(posXMap,posYMap,sizeTile,0));
+    if(mousePos.y>99){
+
+        function getTower(){
+            for(var i=0;i<towers.length;i++) if(towers[i].x == posXMap && towers[i].y==posYMap) return towers[i];
+        }
+        
+        var newTurent=new Turent(posXMap,posYMap,sizeTile,choiceTower,0);
+        newTurent.matchAsset();
+        if(maps[mapChoice][(posYMap-100)/50][posXMap/50] == 0 && money-newTurent.price>=0){
+            towers.push(newTurent);
+            maps[mapChoice][(posYMap-100)/50][posXMap/50]=choiceTower+10;
+            money-=newTurent.price;
+            return;
+        }
+    
+        var searchedTower=getTower();
+        if(maps[mapChoice][(posYMap-100)/50][posXMap/50]>9 && money>=(searchedTower.price/2)){
+            searchedTower.projectileSpeed+=(searchedTower.projectileSpeed/2);
+            searchedTower.projectileDamage+=(searchedTower.projectileDamage/2);
+            money-=searchedTower.price;
+            animations.push(new Animation(posXMap,posYMap,sizeTile,0));
+            return;
+        }
+    }
+    else{
+        if(mousePos.x>=musicOnButtonX && mousePos.x<=(musicOnButtonX+sizeTile) && mousePos.y>=buttonY && mousePos.y<=(buttonY+sizeTile)){
+            musicOn=!musicOn;
+            if(musicOn) backgroundMusic.play();
+            else backgroundMusic.stop();
+            return;
+        }
+        if(mousePos.x>=soundOnButtonX && mousePos.x<=(soundOnButtonX+sizeTile) && mousePos.y>=buttonY && mousePos.y<=(buttonY+sizeTile)){
+            soundsOn=!soundsOn; 
+            return;
+        }
+        if(mousePos.x>=pauseButtonX && mousePos.x<=(pauseButtonX+sizeTile) && mousePos.y>=buttonY && mousePos.y<=(buttonY+sizeTile)){
+            canvas.hidden=true;
+            state=0;
+            pause=1;
+            if(soundsOn)pauseSound.play();
+            renderPauseScreen();
+            return;
+        }
     }
     }, false);
 
