@@ -13,12 +13,13 @@ class Turent{
         this.projectileDamage;
         this.range;
         this.shooting=0;
+        this.reloadTime;
     }
     matchAsset(){
         switch(this.identity){
-            case 0: this.image.src="./Assets/Turent/turent1.png";this.projectileSpeed=50;this.price=50;this.projectileDamage=10;this.range=150;break;
-            case 1: this.image.src="./Assets/Turent/turent2.png";this.projectileSpeed=75;this.price=100;this.projectileDamage=20;this.range=200;break;
-            case 2: this.image.src="./Assets/Turent/turent3.png";this.projectileSpeed=100;this.price=150;this.projectileDamage=30;this.range=250;break;
+            case 0: this.image.src="./Assets/Turent/turent1.png";this.projectileSpeed=50;this.price=50;this.projectileDamage=10;this.range=150;this.reloadTime=50;break;
+            case 1: this.image.src="./Assets/Turent/turent2.png";this.projectileSpeed=75;this.price=100;this.projectileDamage=20;this.range=200;this.reloadTime=40;break;
+            case 2: this.image.src="./Assets/Turent/turent3.png";this.projectileSpeed=100;this.price=150;this.projectileDamage=30;this.range=250;this.reloadTime=30;break;
         }
     }
     setRotation(objectX,objectY){

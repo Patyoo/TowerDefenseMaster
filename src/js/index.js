@@ -53,10 +53,12 @@ function render(){
 }
 
 function update(delta){
+   
     generateTower();
     generateEnemy(delta);
     shoot(delta);
     moveAnimations();
+    
 }
 
 function title(){
@@ -140,11 +142,11 @@ function shoot(delta){
                     animations.push(new Animation(projectiles[i].x,projectiles[i].y,sizeTile,1));
                     enemies.splice(enemies.indexOf(projectiles[i].target),1);
                 }
+                else animations.push(new Explosion(projectiles[i].x,projectiles[i].y,sizeTile/2,0));
                 projectiles.splice(i,1);
             }
          }
 
-        if(tick%50==0){
             var temp;
                     for(temp=0;temp<enemies.length;temp++){
                         if(enemies[temp].health<=0) continue;
@@ -156,26 +158,29 @@ function shoot(delta){
                             if(minIndex==-1) break;
 
                             if(getDistance(enemies[temp].x,enemies[temp].y,towers[minIndex].x,towers[minIndex].y) <=towers[minIndex].range && enemies[temp].health>0){
-                            var newProjectile=new Projectile(towers[minIndex].x,towers[minIndex].y,sizeTile,towers[minIndex].identity,enemies[temp],towers[minIndex].projectileSpeed,towers[minIndex].projectileDamage);
-                            towers[minIndex].shooting=1;
-                            towers[minIndex].target=newProjectile;
-                            projectiles.push(newProjectile);
-                            console.log(newProjectile);
-                            enemies[temp].health-=newProjectile.projectileDamage;
-                            if(soundsOn) towerShotSound.play();
+                                context.fillStyle = "black";
+                                context.fillRect(towers[minIndex].x, towers[minIndex].y,50,50);
+                                new Tile(towers[minIndex].x,towers[minIndex].y,sizeTile,0).create();
+                                towers[minIndex].setRotation(enemies[temp].x,enemies[temp].y);
+                                if(tick%towers[minIndex].reloadTime==0){
+                                    var newProjectile=new Projectile(towers[minIndex].x,towers[minIndex].y,sizeTile,towers[minIndex].identity,enemies[temp],towers[minIndex].projectileSpeed,towers[minIndex].projectileDamage);
+                                    towers[minIndex].shooting=1;
+                                    towers[minIndex].target=newProjectile;
+                                    projectiles.push(newProjectile);
+                                    console.log(newProjectile);
+                                    enemies[temp].health-=newProjectile.projectileDamage;
+                                    if(soundsOn) towerShotSound.play();
+                                }
                             }
                         }
                     }
-            }
 
     }
 
 function generateTower(){
-    var towerCounter=0;
    towers.forEach(element => {
-        element.setRotation(element.target.x,element.target.y);
-        towerCounter++;
-        console.log("Prva pod");
+        if(element.shooting==1) element.setRotation(element.target.x,element.target.y); 
+        else element.setRotation(150,0);
         element.shooting=0;
     });
 }
@@ -255,6 +260,7 @@ canvas.addEventListener('click', function(evt) {
         
         var newTurent=new Turent(posXMap,posYMap,sizeTile,choiceTower,0);
         newTurent.matchAsset();
+        //newTurent.setRotation(0,0);
         if(maps[mapChoice][(posYMap-100)/50][posXMap/50] == 0 && money-newTurent.price>=0){
             towers.push(newTurent);
             maps[mapChoice][(posYMap-100)/50][posXMap/50]=choiceTower+10;
