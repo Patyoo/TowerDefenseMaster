@@ -53,12 +53,10 @@ function render(){
 }
 
 function update(delta){
-   
     generateTower();
     generateEnemy(delta);
     shoot(delta);
     moveAnimations();
-    
 }
 
 function title(){
@@ -66,20 +64,14 @@ function title(){
     context.font = "40px Comic Sans MS";
     context.textAlign = "center";
     new StaticImages(20,10,sizeTile,0).create();
-    context.fillText(health, 100, 50);
     new StaticImages(200,10,sizeTile,1).create();
+    context.fillText(health, 100, 50);
     context.fillText(money, 290, 50);
     context.fillText('Wave: '+wave+"/"+numOfEnemies.length, 500, 50);
     context.fillText('Score: '+score, 750, 50);
     new StaticImages(musicOnButtonX,buttonY,sizeTile,3-musicOn).create();
     new StaticImages(soundOnButtonX,buttonY,sizeTile,5-soundsOn).create();
     new StaticImages(pauseButtonX,buttonY,sizeTile,6).create();
-}
-
-function findStartPosition(){
-    for(var i=0;i<maps[mapChoice].length;i++)
-        for(var j=0;j<maps[mapChoice][0].length;j++)
-            if(maps[mapChoice][i][j] == 2) return [i,j];
 }
 
 function generateMap(){
@@ -99,8 +91,7 @@ function drawMap(){
 function generateEnemy(){    
     if(tick%(150-(diffucultyChoice*50))==0 && enemyReleased<numOfEnemies[wave-1]){
         var newEnemy=new Enemy(findStartPosition()[1]*sizeTile,findStartPosition()[0]*sizeTile+100,sizeTile, 
-        Math.floor(Math.random()* (((2+(diffucultyChoice*3)+wave))%10) )  
-        //0
+        Math.floor(Math.random()* ((diffucultyChoice)+wave+2))  
        );
         newEnemy.matchAsset();
         enemies.push(newEnemy);
@@ -151,26 +142,21 @@ function shoot(delta){
                     for(temp=0;temp<enemies.length;temp++){
                         if(enemies[temp].health<=0) continue;
                         for(var j=0;j<towers.length;j++){
-
                             var towersDistances=[];
                             for(var i=0;i<towers.length;i++) towersDistances.push(getDistance(enemies[temp].x,enemies[temp].y,towers[i].x,towers[i].y));
                             var minIndex=getMinIndex(towersDistances,towers);
                             if(minIndex==-1) break;
-
                             if(getDistance(enemies[temp].x,enemies[temp].y,towers[minIndex].x,towers[minIndex].y) <=towers[minIndex].range && enemies[temp].health>0){
-                                context.fillStyle = "black";
-                                context.fillRect(towers[minIndex].x, towers[minIndex].y,50,50);
-                                new Tile(towers[minIndex].x,towers[minIndex].y,sizeTile,0).create();
-                                towers[minIndex].setRotation(enemies[temp].x,enemies[temp].y);
-                                if(tick%towers[minIndex].reloadTime==0){
-                                    var newProjectile=new Projectile(towers[minIndex].x,towers[minIndex].y,sizeTile,towers[minIndex].identity,enemies[temp],towers[minIndex].projectileSpeed,towers[minIndex].projectileDamage);
-                                    towers[minIndex].shooting=1;
-                                    towers[minIndex].target=newProjectile;
-                                    projectiles.push(newProjectile);
-                                    console.log(newProjectile);
-                                    enemies[temp].health-=newProjectile.projectileDamage;
-                                    if(soundsOn) towerShotSound.play();
-                                }
+                            var newProjectile=new Projectile(towers[minIndex].x,towers[minIndex].y,sizeTile,towers[minIndex].identity,
+                                                    enemies[temp],towers[minIndex].projectileSpeed,towers[minIndex].projectileDamage);
+                            if(tick%towers[minIndex].reloadTime==0){
+                                towers[minIndex].shooting=1;
+                                towers[minIndex].target=newProjectile;
+                                projectiles.push(newProjectile);
+                                enemies[temp].health-=newProjectile.projectileDamage;
+                                if(soundsOn) towerShotSound.play();
+                            }
+                            towers[minIndex].target=enemies[temp];
                             }
                         }
                     }
@@ -178,20 +164,12 @@ function shoot(delta){
     }
 
 function generateTower(){
-   towers.forEach(element => {
-        if(element.shooting==1) element.setRotation(element.target.x,element.target.y); 
-        else element.setRotation(150,0);
+    towers.forEach(element => {
+        element.setRotation(element.target.x,element.target.y);
         element.shooting=0;
     });
 }
 
-function getMousePos(canvas, evt) {
-    var rect = canvas.getBoundingClientRect();
-    return {
-      x: evt.clientX - rect.left,
-      y: evt.clientY - rect.top
-    };
-  }
 function mainLoop(){
     if(state==1){
     var now= Date.now();
@@ -212,27 +190,12 @@ window.onload = function(){
 }
 
 window.addEventListener("keyup",function name(e){
-
-    if(e.keyCode==80 && state!=0){
+    if(e.keyCode==27 && state==1){
         canvas.hidden=true;
         state=0;
         pause=1;
         if(soundsOn)pauseSound.play();
         renderPauseScreen();
-    }
-    if(e.keyCode==27 && state==1){
-        canvas.hidden=true;
-        state=0;
-        saveToStorage();
-        renderEndScreen();
-        resetGameStats();
-    }
-    if(e.keyCode==87 && state==1){
-        canvas.hidden=true;
-        state=0;
-        saveToStorage();
-        renderWinScreen();
-        resetGameStats();
     }
     if(e.keyCode==49 && state==1) choiceTower=0;
     if(e.keyCode==50 && state==1) choiceTower=1;
@@ -244,23 +207,23 @@ window.addEventListener("keyup",function name(e){
         soundsOn=!soundsOn; 
     }
 })
-   
+  
+function getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+      x: evt.clientX - rect.left,
+      y: evt.clientY - rect.top
+    };
+}
+
 canvas.addEventListener('click', function(evt) {
     var mousePos = getMousePos(canvas, evt);
     var posXMap =(mousePos.x-(mousePos.x%50));
     var posYMap= (mousePos.y-(mousePos.y%50));
 
-    console.log(mousePos.x,mousePos.y);
-
     if(mousePos.y>99){
-
-        function getTower(){
-            for(var i=0;i<towers.length;i++) if(towers[i].x == posXMap && towers[i].y==posYMap) return towers[i];
-        }
-        
         var newTurent=new Turent(posXMap,posYMap,sizeTile,choiceTower,0);
         newTurent.matchAsset();
-        //newTurent.setRotation(0,0);
         if(maps[mapChoice][(posYMap-100)/50][posXMap/50] == 0 && money-newTurent.price>=0){
             towers.push(newTurent);
             maps[mapChoice][(posYMap-100)/50][posXMap/50]=choiceTower+10;
@@ -268,7 +231,7 @@ canvas.addEventListener('click', function(evt) {
             return;
         }
     
-        var searchedTower=getTower();
+        var searchedTower=getTower(posXMap,posYMap);
         if(maps[mapChoice][(posYMap-100)/50][posXMap/50]>9 && money>=(searchedTower.price/2)){
             searchedTower.projectileSpeed+=(searchedTower.projectileSpeed/2);
             searchedTower.projectileDamage+=(searchedTower.projectileDamage/2);
@@ -297,5 +260,5 @@ canvas.addEventListener('click', function(evt) {
             return;
         }
     }
-    }, false);
+}, false);
 

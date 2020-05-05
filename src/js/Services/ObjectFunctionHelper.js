@@ -14,3 +14,11 @@ function getMinIndex(array,towers){
     }
     return index;
 }
+function findStartPosition(){
+    for(var i=0;i<maps[mapChoice].length;i++)
+        for(var j=0;j<maps[mapChoice][0].length;j++)
+            if(maps[mapChoice][i][j] == 2) return [i,j];
+}
+function getTower(posXMap,posYMap){
+    for(var i=0;i<towers.length;i++) if(towers[i].x == posXMap && towers[i].y==posYMap) return towers[i];
+}
