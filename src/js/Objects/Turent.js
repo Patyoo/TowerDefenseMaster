@@ -14,6 +14,8 @@ class Turent{
         this.range;
         this.shooting=0;
         this.reloadTime;
+        this.radiusShownTime=60;
+        this.turrentTick=0;
     }
     matchAsset(){
         switch(this.identity){
@@ -26,11 +28,21 @@ class Turent{
         var toObjectX = objectX - this.x;
         var toObjectY = objectY - this.y;
         this.rotation = Math.atan2(toObjectY, toObjectX);
-
-            context.save();
-            context.translate(this.x+this.size/2,this.y+this.size/2);
-            context.rotate(this.rotation+(90*Math.PI/180));
-            context.drawImage(this.image,this.size/-2, this.size/-2);
-            context.restore();
+        context.save();
+        context.translate(this.x+this.size/2,this.y+this.size/2);
+        context.rotate(this.rotation+(90*Math.PI/180));
+        context.drawImage(this.image,this.size/-2, this.size/-2);
+        context.restore();
+    }
+    drawRadius(){
+        this.turrentTick+=1;
+        context.save();
+        context.beginPath();
+        context.arc(this.x+(this.size/2),this.y+(this.size/2), this.range, 0, 2 * Math.PI, false);
+        context.lineWidth = 5;
+        if(this.turrentTick % 10)context.strokeStyle = "white";
+        else context.strokeStyle = "black";
+        context.stroke();
+        context.restore();
     }
 }

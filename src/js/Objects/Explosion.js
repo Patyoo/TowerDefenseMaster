@@ -8,20 +8,17 @@ class Explosion{
         this.identity=identity;
         this.matchAsset();
         this.limit=90;
+        this.sheetWidth=0;
+
     }
     matchAsset(){
         switch(this.identity){
-            case 0: this.image.src="./Assets/Animations/explosion1.png"; break;
-            case 1: this.image.src="./Assets/Animations/explosion2.png"; break;
-            case 2: this.image.src="./Assets/Animations/explosion3.png"; break;
+            case 0: this.image.src="./Assets/Animations/explosion.png"; break;
         }
     }
     move(){
-            context.drawImage(this.image, this.x, this.y, this.size, this.size);
+            context.drawImage(this.image,this.sheetWidth,0,this.size,this.size,this.x,this.y,this.size,this.size);
             this.limit-=5;
-            if(this.limit==30 || this.limit==60){
-                this.identity+=1;
-                this.matchAsset();
-            }
+            if(this.limit==60 || this.limit==30) this.sheetWidth+=50;
     }
 }

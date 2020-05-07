@@ -14,10 +14,10 @@ function renderMapScreen(){
             var button1 = document.createElement("BUTTON");
             button1.className="buttonMapStyle";
             button1.innerHTML="Map1";
-            button1.style.color="#20639B";
+            button1.style.color="white";
             button1.addEventListener("click",function(){
                 mapChoice=0;
-                button1.style.color="#20639B";
+                button1.style.color="white";
                 button2.style.color="#006B38";
                 button3.style.color="#006B38";
                 if(soundsOn) menuSelectSound.play();
@@ -32,7 +32,7 @@ function renderMapScreen(){
             button2.addEventListener("click",function(){
                 mapChoice=1;
                 button1.style.color="#006B38";
-                button2.style.color="#20639B";
+                button2.style.color="white";
                 button3.style.color="#006B38";
                 if(soundsOn) menuSelectSound.play();
             });
@@ -48,7 +48,7 @@ function renderMapScreen(){
                 if(soundsOn) menuSelectSound.play();
                 button1.style.color="#006B38";
                 button2.style.color="#006B38";
-                button3.style.color="#20639B";
+                button3.style.color="white";
             });
             map3Div.appendChild(button3);    
 
@@ -68,10 +68,10 @@ function renderMapScreen(){
                 var button4 = document.createElement("BUTTON");
                 button4.className="buttonMapStyle";
                 button4.innerHTML="Easy";
-                button4.style.color="#20639B";
+                button4.style.color="white";
                 button4.addEventListener("click",function(){
                     diffucultyChoice=0;
-                    button4.style.color="#20639B";
+                    button4.style.color="white";
                     button5.style.color="#006B38";
                     button6.style.color="#006B38";
                     if(soundsOn) menuSelectSound.play();
@@ -87,7 +87,7 @@ function renderMapScreen(){
                     diffucultyChoice=1;
                     if(soundsOn) menuSelectSound.play();
                     button4.style.color="#006B38";
-                    button5.style.color="#20639B";
+                    button5.style.color="white";
                     button6.style.color="#006B38";
                 });
                 MediumDiv.appendChild(button5);    
@@ -102,7 +102,7 @@ function renderMapScreen(){
                     if(soundsOn) menuSelectSound.play();
                     button4.style.color="#006B38";
                     button5.style.color="#006B38";
-                    button6.style.color="#20639B";
+                    button6.style.color="white";
                 });
                 HardDiv.appendChild(button6);    
 

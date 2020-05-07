@@ -9,6 +9,7 @@ function nextLevel() {
     wave++;
     checkTick=0;
     enemyReleased=0;
+    score+=100;
     if(wave==numOfEnemies.length+1){
     canvas.hidden=true;
     state=0;

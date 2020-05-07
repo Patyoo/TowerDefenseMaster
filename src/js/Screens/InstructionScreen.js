@@ -8,7 +8,7 @@ function renderInstructionScreen(){
 
     var PlacingLabel = document.createElement("p");
     PlacingLabel.className="textP";
-    PlacingLabel.textContent="Placing towers: Mouse(left click)";
+    PlacingLabel.textContent="Placing towers: Mouse(double left click)";
 
     var SelectingLabel = document.createElement("p");
     SelectingLabel.className="textP";
@@ -18,6 +18,18 @@ function renderInstructionScreen(){
     MuteLabel.className="textP";
     MuteLabel.textContent="Mute/Unmute sounds and audio: M";
 
+    var UpgradeLabel = document.createElement("p");
+    UpgradeLabel.className="textP";
+    UpgradeLabel.textContent="Upgrade towers with(mouse over tower): Mouse(double left click)";
+
+    var RangeLabel = document.createElement("p");
+    RangeLabel.className="textP";
+    RangeLabel.textContent="Show range of tower: Mouse(single left click)";
+
+    var PauseLabel = document.createElement("p");
+    PauseLabel.className="textP";
+    PauseLabel.textContent="Pause game: Escape";
+
     var ResumeDiv=document.createElement("div");
     ResumeDiv.className="clickDiv";
     ResumeDiv.textContent="Continue";
@@ -26,12 +38,14 @@ function renderInstructionScreen(){
         if(soundsOn) menuSelectSound.play();
         read=1;
         renderMapScreen();
-        console.log(read);
     });
     main.appendChild(textDiv);
     main.appendChild(PlacingLabel);
     main.appendChild(SelectingLabel);
     main.appendChild(MuteLabel);
+    main.appendChild(UpgradeLabel);
+    main.appendChild(RangeLabel);
+    main.appendChild(PauseLabel);
     main.appendChild(ResumeDiv);
     document.body.appendChild(main);
     }
