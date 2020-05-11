@@ -154,7 +154,10 @@ function shoot(delta){
                 enemies[temp].health-=newProjectile.projectileDamage;
                 if(soundsOn) towerShotSound.play();
             }
-            towers[minIndex].target=enemies[temp];
+            else{
+                towers[minIndex].target=enemies[temp]; 
+                towers[minIndex].shooting=1;
+            }
             }
         }
     }
